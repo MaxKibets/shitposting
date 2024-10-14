@@ -1,15 +1,33 @@
 "use client";
 
-import { formatDate } from "@/lib/format";
-import LikeButton from "./like-icon";
-import { togglePostLikeStatus } from "@/actions/actions";
 import { useOptimistic } from "react";
+
+import Image from "next/image";
+
+import { formatDate } from "@/lib/format";
+import { togglePostLikeStatus } from "@/actions/actions";
+
+import LikeButton from "./like-icon";
+
+const imageLoader = ({ quality, src }) => {
+  const uploadPath = "upload/";
+  const [urlStart, urlEnd] = src.split(uploadPath);
+
+  return `${urlStart}${uploadPath}w_200,q_${quality}/${urlEnd}`;
+};
 
 function Post({ post, action }) {
   return (
     <article className="post">
       <div className="post-image">
-        <img src={post.image} alt={post.title} />
+        <Image
+          loader={imageLoader}
+          src={post.image}
+          width={200}
+          height={200}
+          alt={post.title}
+          quality={50}
+        />
       </div>
       <div className="post-content">
         <header>
@@ -57,9 +75,9 @@ export default function Posts({ posts }) {
     return <p>There are no posts yet. Maybe start sharing some?</p>;
   }
 
-  const updatePost = async (postId) => {
+  const updatePost = (postId) => {
     updateOptimisticPosts(postId);
-    await togglePostLikeStatus(postId);
+    togglePostLikeStatus(postId);
   };
 
   return (

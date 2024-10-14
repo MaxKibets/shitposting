@@ -63,7 +63,6 @@ export async function getPosts(maxNumber) {
     ORDER BY createdAt DESC
     ${limitClause}`);
 
-  await new Promise((resolve) => setTimeout(resolve, 1000));
   return maxNumber ? stmt.all(maxNumber) : stmt.all();
 }
 
@@ -74,15 +73,15 @@ type Post = {
   userId: string;
 };
 
-export async function storePost(post: Post) {
+export function storePost(post: Post) {
   const stmt = db.prepare(`
     INSERT INTO posts (image_url, title, content, user_id)
     VALUES (?, ?, ?, ?)`);
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   return stmt.run(post.imageUrl, post.title, post.content, post.userId);
 }
 
-export async function updatePostLikeStatus(postId: string, userId: string) {
+export function updatePostLikeStatus(postId: string, userId: string) {
   const stmt = db.prepare(`
     SELECT COUNT(*) AS count
     FROM likes
@@ -94,13 +93,13 @@ export async function updatePostLikeStatus(postId: string, userId: string) {
     const stmt = db.prepare(`
       INSERT INTO likes (user_id, post_id)
       VALUES (?, ?)`);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     return stmt.run(userId, postId);
   } else {
     const stmt = db.prepare(`
       DELETE FROM likes
       WHERE user_id = ? AND post_id = ?`);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     return stmt.run(userId, postId);
   }
 }

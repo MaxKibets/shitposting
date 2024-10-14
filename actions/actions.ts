@@ -38,7 +38,7 @@ export const createPost = async (
 
   const imageUrl = await uploadImage(image);
 
-  await storePost({
+  storePost({
     imageUrl,
     title,
     content,
@@ -48,7 +48,7 @@ export const createPost = async (
   redirect("/feed");
 };
 
-export const togglePostLikeStatus = async (postId: string) => {
-  await updatePostLikeStatus(postId, "2");
+export const togglePostLikeStatus = (postId: string) => {
+  updatePostLikeStatus(postId, "2");
   revalidatePath("/feed");
 };
